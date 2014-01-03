@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' data-ng-app="">
+    <head>
+        <title>Cloud Chess</title>
+
+        <script src='http://code.jquery.com/jquery-2.0.3.min.js' type='text/javascript'></script> 
+		<script src='http://dl.dropboxusercontent.com/s/sl5azkks6isi42v/cloudchat.js' type='text/javascript'></script>
+		
+
+		<script type="text/javascript" src="../source/cloudchess.js"></script>
+		<script type="text/javascript">
+			CloudChess.setup = {
+		        board : {
+		        	pieceTheme: '../libs/chessboardjs-0.3.0/img/chesspieces/wikipedia/{piece}.png',
+		  			showNotation: false,
+		  			draggable: true,
+  					dropOffBoard: 'snapback'
+		        }       
+		    }
+		</script>
+
+		<style type="text/css">
+        	/*! chessboard.js v0.3.0 | (c) 2013 Chris Oakman | MIT License chessboardjs.com/license */
+			.clearfix-7da63{clear:both}.board-b72b1{border:2px solid #404040;-moz-box-sizing:content-box;box-sizing:content-box}.square-55d63{float:left;position:relative;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.white-1e1d7{background-color:#f0d9b5;color:#b58863}.black-3c85d{background-color:#b58863;color:#f0d9b5}.highlight1-32417,.highlight2-9c5d2{-webkit-box-shadow:inset 0 0 3px 3px yellow;-moz-box-shadow:inset 0 0 3px 3px yellow;box-shadow:inset 0 0 3px 3px yellow}.notation-322f9{cursor:default;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;position:absolute}.alpha-d2270{bottom:1px;right:3px}.numeric-fc462{top:2px;left:2px}
+		</style>
+    </head>
+    <body>
+        <b>Cloud Chess</b>, coming soon!!!
+        <div data-ng-controller="CloudChess.BoardController" style="width: 400px"  ></div> 
+    </body>
+</html>
