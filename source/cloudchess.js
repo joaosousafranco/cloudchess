@@ -48,6 +48,70 @@ b.position));W=!0}W&&(I(),ya(),xa());return q};window.ChessBoard.fenToObj=K;wind
 })(window.CloudChess = window.CloudChess || {});
 
 (function (CloudChess, undefined) {
+	CloudChess.Game = function(data){
+		this.id = data.id;
+		this.white = data.white;
+		this.pgn = data.pgn;
+	}
+})(window.CloudChess = window.CloudChess || {});
+
+(function (CloudChess, undefined) {
+	var RealtimeStorageService = function(){
+        this.client = CloudChat.RealtimeStorageService.instance.client;     
+
+        if(RealtimeStorageService.caller != RealtimeStorageService.getInstance){
+            throw new Error("This object cannot be instanciated");
+        }
+    };
+
+    RealtimeStorageService.instance = null;
+
+    RealtimeStorageService.getInstance = function(){
+        if(this.instance === null){
+            this.instance = new RealtimeStorageService();
+        }
+        return this.instance;
+    };
+
+    RealtimeStorageService.prototype = {
+        game : function(id,callback){
+        	var itemRef = this.client.table("chess-games")
+        					.item({ primary: id });
+
+			itemRef.get(
+				function success(itemSnapshot) {
+					if(itemSnapshot && itemSnapshot.val()){
+						var game = new CloudChess.Game(itemSnapshot.val());
+						callback(game);
+					}else{
+						callback(null);
+					}
+				}, 
+				function error(data) { 
+					callback(null);
+				}
+			);      
+        },
+
+        createGame : function(game,callback){
+        	var tableRef = this.client.table("chess-games");
+
+        	tableRef.push(
+        		game,
+        		function success(itemSnapshot) {
+					callback(game);
+				}, 
+				function error(data) { 
+					callback(null);
+				}
+        	);
+        }
+    }    
+
+    CloudChess.RealtimeStorageService = RealtimeStorageService;
+})(window.CloudChess = window.CloudChess || {});
+
+(function (CloudChess, undefined) {
 
 	CloudChess.BoardController = function($scope, $element){ 
 		var configuration = CloudChess.setup.board;
@@ -58,10 +122,17 @@ b.position));W=!0}W&&(I(),ya(),xa());return q};window.ChessBoard.fenToObj=K;wind
 
 		this.game = new Chess();
     	this.board = new ChessBoard($element,CloudChess.setup.board);	
-    	this.board.start();    
+    	this.board.start(false);    
+    	this.handleEvents();
     }
 
     CloudChess.BoardController.prototype = {
+    	handleEvents : function(){
+    		CloudChat.EventManager.subscribe("currentGame",function(game){            
+		        //TODO: change board
+		    });
+    	},
+
     	onDragStart : function(source, piece, position, orientation) {
 		  if (this.game.game_over() === true ||
 		      (this.game.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -80,6 +151,8 @@ b.position));W=!0}W&&(I(),ya(),xa());return q};window.ChessBoard.fenToObj=K;wind
 
 		  // illegal move
 		  if (move === null) return 'snapback';
+
+		  console.log(this.game.turn(),source,target);
 
 		  this.updateStatus();
 		},
